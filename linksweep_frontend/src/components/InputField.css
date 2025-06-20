@@ -10,29 +10,33 @@
   font-size: 0.875rem;
 }
 
-/* Unified wrapper */
+/* Alternative design - embrace the segments but make them look intentional */
 .unified-wrapper {
   position: relative;
-  background: #ffffff;
-  border: 2px solid #e5e7eb;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
   transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .unified-wrapper:hover {
-  border-color: #d1d5db;
+  border-color: #cbd5e1;
+  background: #f1f5f9;
 }
 
 .unified-wrapper.focused {
   border-color: #3b82f6;
+  background: #ffffff;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .unified-wrapper.has-value {
   border-color: #10b981;
+  background: #ffffff;
 }
 
-/* Unified input with browser controls disabled */
+/* Input styling that works with browser controls */
 .unified-input {
   width: 100%;
   border: none;
@@ -41,71 +45,62 @@
   color: #111827;
   font-size: 1rem;
   padding: 1rem;
-  border-radius: 12px;
   font-family: inherit;
-
-  /* Disable browser password controls */
-  -webkit-textfield-decoration-container: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-/* Specifically disable password reveal button */
-.unified-input::-webkit-textfield-decoration-container {
-  display: none !important;
-}
-
-.unified-input::-webkit-credentials-auto-fill-button {
-  display: none !important;
-}
-
-.unified-input::-webkit-strong-password-auto-fill-button {
-  display: none !important;
-}
-
-.unified-input::-ms-reveal {
-  display: none !important;
-}
-
-.unified-input::-ms-clear {
-  display: none !important;
+  border-radius: 0;
 }
 
 .unified-input::placeholder {
   color: #9ca3af;
 }
 
-/* Static icon */
+/* Icon styling */
 .static-icon {
   position: absolute;
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #9ca3af;
+  color: #64748b;
   font-size: 1.125rem;
   pointer-events: none;
   z-index: 1;
 }
 
-/* Remove all focus styling from input */
+/* Remove focus styling from input - let wrapper handle it */
 .unified-input:focus,
-.unified-input:active,
-.unified-input:focus-visible {
+.unified-input:active {
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
 }
 
-/* Autofill styling */
-.unified-input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px white inset;
-  -webkit-text-fill-color: #111827;
+/* Style browser password controls to match our design */
+.unified-input::-webkit-textfield-decoration-container {
+  background: transparent !important;
+  border: none !important;
 }
 
-/* Force remove any browser controls */
-.unified-input[type="password"] {
-  -webkit-textfield-decoration-container: none !important;
+.unified-input::-webkit-credentials-auto-fill-button,
+.unified-input::-webkit-strong-password-auto-fill-button {
+  background: transparent !important;
+  border: none !important;
+  color: #64748b !important;
+}
+
+.unified-input::-ms-reveal {
+  background: transparent !important;
+  border: none !important;
+  color: #64748b !important;
+}
+
+/* Autofill styling */
+.unified-input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #f8fafc inset;
+  -webkit-text-fill-color: #111827;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.unified-wrapper.focused .unified-input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
 }
 
 /* Responsive */
@@ -120,14 +115,18 @@
   }
 }
 
-/* Additional browser-specific overrides */
-input[type="password"]::-webkit-textfield-decoration-container {
-  display: none !important;
+/* Clean appearance for all input types */
+.unified-input[type="email"],
+.unified-input[type="password"],
+.unified-input[type="text"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-input[type="password"]::-webkit-credentials-auto-fill-button {
-  visibility: hidden !important;
-  pointer-events: none !important;
-  position: absolute !important;
-  right: 0 !important;
+/* Additional styling to make browser controls blend */
+.unified-wrapper:focus-within {
+  border-color: #3b82f6;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }

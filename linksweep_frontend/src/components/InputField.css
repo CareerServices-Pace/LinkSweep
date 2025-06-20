@@ -10,61 +10,47 @@
   font-size: 0.875rem;
 }
 
-/* Clean wrapper - single border container */
-.clean-input-wrapper {
+/* Ultra-simple unified wrapper */
+.unified-wrapper {
   position: relative;
   background: #ffffff;
   border: 2px solid #e5e7eb;
   border-radius: 12px;
   transition: all 0.3s ease;
-  display: block; /* Force block display */
 }
 
-.clean-input-wrapper:hover {
+.unified-wrapper:hover {
   border-color: #d1d5db;
 }
 
-.clean-input-wrapper.focused {
+.unified-wrapper.focused {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.clean-input-wrapper.has-value {
+.unified-wrapper.has-value {
   border-color: #10b981;
 }
 
-/* Single input element that fills container */
-.clean-input {
+/* Single input with no competing elements */
+.unified-input {
   width: 100%;
-  border: 0;
-  outline: 0;
+  border: none;
+  outline: none;
   background: transparent;
   color: #111827;
   font-size: 1rem;
   padding: 1rem;
   border-radius: 12px;
   font-family: inherit;
-  line-height: 1.5;
 }
 
-.clean-input::placeholder {
+.unified-input::placeholder {
   color: #9ca3af;
 }
 
-/* Remove ALL browser styling */
-.clean-input:focus,
-.clean-input:active,
-.clean-input:focus-visible {
-  border: 0 !important;
-  outline: 0 !important;
-  box-shadow: none !important;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-/* Icon positioned absolutely but non-interactive */
-.input-icon-clean {
+/* Static icon - no interaction */
+.static-icon {
   position: absolute;
   left: 1rem;
   top: 50%;
@@ -75,69 +61,28 @@
   z-index: 1;
 }
 
-/* Password toggle - completely separate from input */
-.password-toggle-clean {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #9ca3af;
-  font-size: 1.125rem;
-  cursor: pointer;
-  z-index: 1;
-  padding: 0.25rem;
-  transition: color 0.2s ease;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.password-toggle-clean:hover {
-  color: #6b7280;
-}
-
-/* Force single border behavior */
-.clean-input-wrapper * {
+/* Remove all browser styling */
+.unified-input:focus,
+.unified-input:active {
   border: none !important;
   outline: none !important;
+  box-shadow: none !important;
 }
 
-/* Autofill handling */
-.clean-input:-webkit-autofill {
+/* Autofill */
+.unified-input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px white inset;
   -webkit-text-fill-color: #111827;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .clean-input {
+  .unified-input {
     padding: 0.875rem;
     font-size: 0.9rem;
   }
 
-  .input-icon-clean {
+  .static-icon {
     left: 0.875rem;
   }
-
-  .password-toggle-clean {
-    right: 0.875rem;
-  }
-}
-
-/* Browser specific overrides */
-.clean-input[type="email"],
-.clean-input[type="password"],
-.clean-input[type="text"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-/* Force remove focus rings */
-.clean-input-wrapper:focus-within {
-  /* Don't add any additional borders here */
-}
-
-.clean-input-wrapper:focus-within .clean-input {
-  border: none !important;
-  outline: none !important;
 }

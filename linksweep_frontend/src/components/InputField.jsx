@@ -11,40 +11,28 @@ const InputField = ({
   icon,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleTogglePassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const inputType = type === "password" && showPassword ? "text" : type;
 
   return (
     <div className="input-field">
       {label && <label className="input-label">{label}</label>}
       <div
-        className={`clean-input-wrapper ${isFocused ? "focused" : ""} ${value ? "has-value" : ""}`}
+        className={`unified-wrapper ${isFocused ? "focused" : ""} ${value ? "has-value" : ""}`}
       >
-        {icon && <span className="input-icon-clean">{icon}</span>}
+        {icon && <span className="static-icon">{icon}</span>}
         <input
-          type={inputType}
+          type={type}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           required={required}
-          className="clean-input"
+          className="unified-input"
           style={{
             paddingLeft: icon ? "3rem" : "1rem",
-            paddingRight: type === "password" ? "3rem" : "1rem",
+            paddingRight: "1rem",
           }}
         />
-        {type === "password" && (
-          <div className="password-toggle-clean" onClick={handleTogglePassword}>
-            {showPassword ? "👁️" : "👁️‍🗨️"}
-          </div>
-        )}
       </div>
     </div>
   );

@@ -1,0 +1,76 @@
+.input-field {
+  margin-bottom: 1.5rem;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.input-container:hover {
+  border-color: #d1d5db;
+}
+
+.input-container.focused {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input-container.has-value {
+  border-color: #10b981;
+}
+
+.input-icon {
+  padding-left: 1rem;
+  color: #9ca3af;
+  font-size: 1.125rem;
+}
+
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 1rem;
+  font-size: 1rem;
+  background: transparent;
+  color: #111827;
+}
+
+.input::placeholder {
+  color: #9ca3af;
+}
+
+.password-toggle {
+  background: none;
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+  color: #9ca3af;
+  font-size: 1.125rem;
+  transition: color 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .input {
+    padding: 0.875rem;
+    font-size: 0.9rem;
+  }
+}

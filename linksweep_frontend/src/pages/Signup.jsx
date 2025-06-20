@@ -132,16 +132,6 @@ const Signup = () => {
               <div className="password-error">Passwords do not match</div>
             )}
 
-            <div className="auth-options">
-              <label className="remember-me">
-                <input type="checkbox" required />
-                <span className="checkmark"></span>I agree to the{" "}
-                <button type="button" className="terms-link">
-                  Terms & Conditions
-                </button>
-              </label>
-            </div>
-
             <button
               type="submit"
               className="auth-button primary"

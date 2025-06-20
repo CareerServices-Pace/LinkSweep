@@ -93,15 +93,6 @@ const Login = () => {
             <button type="submit" className="auth-button primary">
               Sign In
             </button>
-
-            <div className="auth-divider">
-              <span>or</span>
-            </div>
-
-            <button type="button" className="auth-button secondary">
-              <span className="google-icon">🌐</span>
-              Continue with Google
-            </button>
           </form>
 
           <div className="auth-footer">

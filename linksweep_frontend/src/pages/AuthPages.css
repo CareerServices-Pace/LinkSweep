@@ -2,13 +2,18 @@
 .auth-container {
   display: flex;
   min-height: 100vh;
+  height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-/* Left Side - 60% */
+/* Left Side - 60% - Sticky full height */
 .auth-left {
   flex: 0 0 60%;
-  position: relative;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 60%;
   overflow: hidden;
 }
 
@@ -114,7 +119,7 @@
   font-weight: 400;
 }
 
-/* Right Side - 40% */
+/* Right Side - 40% - Scrollable and positioned */
 .auth-right {
   flex: 0 0 40%;
   background: #ffffff;
@@ -122,6 +127,9 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  margin-left: 60%;
+  min-height: 100vh;
+  overflow-y: auto;
 }
 
 .auth-form-container {
@@ -319,10 +327,11 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .auth-left {
-    flex: 0 0 50%;
+    width: 50%;
   }
 
   .auth-right {
+    margin-left: 50%;
     flex: 0 0 50%;
   }
 }
@@ -330,14 +339,18 @@
 @media (max-width: 768px) {
   .auth-container {
     flex-direction: column;
+    height: auto;
   }
 
   .auth-left {
-    flex: 0 0 40vh;
+    position: relative;
+    width: 100%;
+    height: 40vh;
     min-height: 40vh;
   }
 
   .auth-right {
+    margin-left: 0;
     flex: 1;
     min-height: 60vh;
     padding: 1.5rem;

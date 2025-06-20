@@ -23,8 +23,9 @@ const InputField = ({
     <div className="input-field">
       {label && <label className="input-label">{label}</label>}
       <div
-        className={`seamless-wrapper ${isFocused ? "focused" : ""} ${value ? "has-value" : ""}`}
+        className={`clean-input-wrapper ${isFocused ? "focused" : ""} ${value ? "has-value" : ""}`}
       >
+        {icon && <span className="input-icon-clean">{icon}</span>}
         <input
           type={inputType}
           placeholder={placeholder}
@@ -33,13 +34,16 @@ const InputField = ({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           required={required}
-          className={`seamless-input ${icon ? "with-icon" : ""} ${type === "password" ? "with-toggle" : ""}`}
+          className="clean-input"
+          style={{
+            paddingLeft: icon ? "3rem" : "1rem",
+            paddingRight: type === "password" ? "3rem" : "1rem",
+          }}
         />
-        {icon && <span className="absolute-icon">{icon}</span>}
         {type === "password" && (
-          <span className="absolute-toggle" onClick={handleTogglePassword}>
+          <div className="password-toggle-clean" onClick={handleTogglePassword}>
             {showPassword ? "👁️" : "👁️‍🗨️"}
-          </span>
+          </div>
         )}
       </div>
     </div>

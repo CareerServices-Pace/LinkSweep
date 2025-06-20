@@ -10,87 +10,61 @@
   font-size: 0.875rem;
 }
 
-/* Ultimate seamless wrapper */
-.seamless-wrapper {
+/* Clean wrapper - single border container */
+.clean-input-wrapper {
   position: relative;
   background: #ffffff;
   border: 2px solid #e5e7eb;
   border-radius: 12px;
   transition: all 0.3s ease;
-  isolation: isolate; /* Create new stacking context */
+  display: block; /* Force block display */
 }
 
-.seamless-wrapper:hover {
+.clean-input-wrapper:hover {
   border-color: #d1d5db;
 }
 
-.seamless-wrapper.focused {
+.clean-input-wrapper.focused {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.seamless-wrapper.has-value {
+.clean-input-wrapper.has-value {
   border-color: #10b981;
 }
 
-/* Ultimate input styling - remove ALL browser defaults */
-.seamless-input {
+/* Single input element that fills container */
+.clean-input {
   width: 100%;
-  border: none !important;
-  outline: none !important;
-  background: transparent !important;
+  border: 0;
+  outline: 0;
+  background: transparent;
   color: #111827;
   font-size: 1rem;
   padding: 1rem;
   border-radius: 12px;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  appearance: none !important;
-  box-shadow: none !important;
-  margin: 0 !important;
-
-  /* Aggressive focus removal */
-  -webkit-tap-highlight-color: transparent !important;
-  -webkit-focus-ring-color: transparent !important;
-  -moz-outline: none !important;
-  -moz-user-focus: ignore !important;
+  font-family: inherit;
+  line-height: 1.5;
 }
 
-/* Remove browser focus styling completely */
-.seamless-input:focus,
-.seamless-input:focus-visible,
-.seamless-input:focus-within,
-.seamless-input:active,
-.seamless-input:target {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  appearance: none !important;
-  -webkit-tap-highlight-color: transparent !important;
-  -webkit-focus-ring-color: transparent !important;
-}
-
-.seamless-input.with-icon {
-  padding-left: 3rem;
-}
-
-.seamless-input.with-toggle {
-  padding-right: 3rem;
-}
-
-.seamless-input.with-icon.with-toggle {
-  padding-left: 3rem;
-  padding-right: 3rem;
-}
-
-.seamless-input::placeholder {
+.clean-input::placeholder {
   color: #9ca3af;
 }
 
-/* Absolutely positioned icon - no interaction */
-.absolute-icon {
+/* Remove ALL browser styling */
+.clean-input:focus,
+.clean-input:active,
+.clean-input:focus-visible {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Icon positioned absolutely but non-interactive */
+.input-icon-clean {
   position: absolute;
   left: 1rem;
   top: 50%;
@@ -98,15 +72,11 @@
   color: #9ca3af;
   font-size: 1.125rem;
   pointer-events: none;
-  z-index: 2;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  z-index: 1;
 }
 
-/* Password toggle with aggressive styling removal */
-.absolute-toggle {
+/* Password toggle - completely separate from input */
+.password-toggle-clean {
   position: absolute;
   right: 1rem;
   top: 50%;
@@ -114,118 +84,60 @@
   color: #9ca3af;
   font-size: 1.125rem;
   cursor: pointer;
+  z-index: 1;
+  padding: 0.25rem;
   transition: color 0.2s ease;
   user-select: none;
-  z-index: 2;
-
-  /* Remove all possible button/element styling */
-  border: none !important;
-  background: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  appearance: none !important;
-  -webkit-tap-highlight-color: transparent !important;
-  -webkit-focus-ring-color: transparent !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  -webkit-user-select: none;
 }
 
-.absolute-toggle:hover {
+.password-toggle-clean:hover {
   color: #6b7280;
 }
 
-.absolute-toggle:focus,
-.absolute-toggle:focus-visible,
-.absolute-toggle:focus-within,
-.absolute-toggle:active {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-  -webkit-tap-highlight-color: transparent !important;
-}
-
-/* Remove autofill styling */
-.seamless-input:-webkit-autofill,
-.seamless-input:-webkit-autofill:hover,
-.seamless-input:-webkit-autofill:focus,
-.seamless-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px white inset !important;
-  -webkit-text-fill-color: #111827 !important;
-  transition: background-color 5000s ease-in-out 0s;
+/* Force single border behavior */
+.clean-input-wrapper * {
   border: none !important;
   outline: none !important;
 }
 
-/* Force override any browser focus rings */
-.seamless-wrapper *:focus {
-  outline: none !important;
-  border: none !important;
-  box-shadow: none !important;
+/* Autofill handling */
+.clean-input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset;
+  -webkit-text-fill-color: #111827;
 }
 
-.seamless-wrapper *:focus-visible {
-  outline: none !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width: 768px) {
-  .seamless-input {
+  .clean-input {
     padding: 0.875rem;
     font-size: 0.9rem;
   }
 
-  .seamless-input.with-icon {
-    padding-left: 2.75rem;
-  }
-
-  .seamless-input.with-toggle {
-    padding-right: 2.75rem;
-  }
-
-  .seamless-input.with-icon.with-toggle {
-    padding-left: 2.75rem;
-    padding-right: 2.75rem;
-  }
-
-  .absolute-icon {
+  .input-icon-clean {
     left: 0.875rem;
   }
 
-  .absolute-toggle {
+  .password-toggle-clean {
     right: 0.875rem;
   }
 }
 
-/* Additional aggressive browser compatibility */
-.seamless-input[type="email"],
-.seamless-input[type="password"],
-.seamless-input[type="text"] {
-  border-radius: 12px;
+/* Browser specific overrides */
+.clean-input[type="email"],
+.clean-input[type="password"],
+.clean-input[type="text"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Force remove focus rings */
+.clean-input-wrapper:focus-within {
+  /* Don't add any additional borders here */
+}
+
+.clean-input-wrapper:focus-within .clean-input {
   border: none !important;
-}
-
-/* Safari specific fixes */
-@supports (-webkit-appearance: none) {
-  .seamless-input {
-    -webkit-appearance: none !important;
-  }
-
-  .absolute-toggle {
-    -webkit-appearance: none !important;
-  }
-}
-
-/* Firefox specific fixes */
-@-moz-document url-prefix() {
-  .seamless-input {
-    -moz-appearance: none !important;
-  }
-
-  .absolute-toggle {
-    -moz-appearance: none !important;
-  }
+  outline: none !important;
 }

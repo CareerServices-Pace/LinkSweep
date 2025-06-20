@@ -10,97 +10,116 @@
   font-size: 0.875rem;
 }
 
-.input-container {
+/* Single unified container approach */
+.unified-input-container {
   position: relative;
-  display: flex;
-  align-items: center;
   background: #ffffff;
   border: 2px solid #e5e7eb;
   border-radius: 12px;
   transition: all 0.3s ease;
-  overflow: hidden;
+  padding: 1rem;
 }
 
-/* Aggressively remove all borders from child elements */
-.input-container *,
-.input-container *:focus,
-.input-container *:active,
-.input-container *:hover,
-.input-container input,
-.input-container input:focus,
-.input-container input:active,
-.input-container button,
-.input-container button:focus,
-.input-container button:active {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  appearance: none !important;
-}
-
-.input-container:hover {
+.unified-input-container:hover {
   border-color: #d1d5db;
 }
 
-.input-container.focused {
+.unified-input-container.focused {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.input-container.has-value {
+.unified-input-container.has-value {
   border-color: #10b981;
 }
 
-.input-icon {
+/* Content wrapper */
+.input-content {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding-left: 1rem;
-  padding-right: 0.5rem;
-  color: #9ca3af;
-  font-size: 1.125rem;
-  background: transparent;
-  flex-shrink: 0;
-  min-width: auto;
+  width: 100%;
+  position: relative;
 }
 
-.input {
+/* Icon styling */
+.input-icon {
+  color: #9ca3af;
+  font-size: 1.125rem;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Seamless input */
+.seamless-input {
   flex: 1;
-  padding: 1rem 0.5rem;
-  font-size: 1rem;
+  border: none;
+  outline: none;
   background: transparent;
   color: #111827;
+  font-size: 1rem;
+  padding: 0;
+  margin: 0;
   width: 100%;
-  min-width: 0;
 }
 
-.input::placeholder {
+.seamless-input::placeholder {
   color: #9ca3af;
 }
 
+/* Remove all browser default styling */
+.seamless-input:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.seamless-input:active {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+/* Password toggle */
 .password-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  padding: 1rem;
-  cursor: pointer;
   color: #9ca3af;
   font-size: 1.125rem;
-  transition: color 0.2s ease;
+  cursor: pointer;
+  margin-left: 0.75rem;
   flex-shrink: 0;
-  min-width: auto;
+  transition: color 0.2s ease;
+  user-select: none;
 }
 
 .password-toggle:hover {
   color: #6b7280;
 }
 
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .input {
+  .unified-input-container {
     padding: 0.875rem;
+  }
+
+  .seamless-input {
     font-size: 0.9rem;
   }
+}
+
+/* Additional browser compatibility */
+.seamless-input[type="email"],
+.seamless-input[type="password"],
+.seamless-input[type="text"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+/* Remove autofill styling */
+.seamless-input:-webkit-autofill,
+.seamless-input:-webkit-autofill:hover,
+.seamless-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px white inset;
+  -webkit-text-fill-color: #111827;
+  transition: background-color 5000s ease-in-out 0s;
 }

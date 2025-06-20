@@ -23,28 +23,26 @@ const InputField = ({
     <div className="input-field">
       {label && <label className="input-label">{label}</label>}
       <div
-        className={`input-container ${isFocused ? "focused" : ""} ${value ? "has-value" : ""}`}
+        className={`unified-input-container ${isFocused ? "focused" : ""} ${value ? "has-value" : ""}`}
       >
-        {icon && <span className="input-icon">{icon}</span>}
-        <input
-          type={inputType}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          required={required}
-          className="input"
-        />
-        {type === "password" && (
-          <button
-            type="button"
-            className="password-toggle"
-            onClick={handleTogglePassword}
-          >
-            {showPassword ? "👁️" : "👁️‍🗨️"}
-          </button>
-        )}
+        <div className="input-content">
+          {icon && <span className="input-icon">{icon}</span>}
+          <input
+            type={inputType}
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            required={required}
+            className="seamless-input"
+          />
+          {type === "password" && (
+            <span className="password-toggle" onClick={handleTogglePassword}>
+              {showPassword ? "👁️" : "👁️‍🗨️"}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

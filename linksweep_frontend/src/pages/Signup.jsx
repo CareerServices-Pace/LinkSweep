@@ -136,9 +136,9 @@ const Signup = () => {
               <label className="remember-me">
                 <input type="checkbox" required />
                 <span className="checkmark"></span>I agree to the{" "}
-                <a href="#" className="terms-link">
+                <button type="button" className="terms-link">
                   Terms & Conditions
-                </a>
+                </button>
               </label>
             </div>
 

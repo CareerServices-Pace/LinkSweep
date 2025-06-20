@@ -21,6 +21,12 @@
   overflow: hidden;
 }
 
+.input-container * {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 .input-container:hover {
   border-color: #d1d5db;
 }
@@ -42,26 +48,17 @@
   padding-right: 0.5rem;
   color: #9ca3af;
   font-size: 1.125rem;
-  border: none;
   background: none;
+  flex-shrink: 0;
 }
 
 .input {
   flex: 1;
-  border: none;
-  outline: none;
   padding: 1rem 0.5rem;
   font-size: 1rem;
   background: transparent;
   color: #111827;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-.input:focus {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
+  width: 100%;
 }
 
 .input::placeholder {
@@ -73,18 +70,12 @@
   align-items: center;
   justify-content: center;
   background: none;
-  border: none;
   padding: 1rem;
   cursor: pointer;
   color: #9ca3af;
   font-size: 1.125rem;
   transition: color 0.2s ease;
-  outline: none;
-}
-
-.password-toggle:focus {
-  outline: none;
-  border: none;
+  flex-shrink: 0;
 }
 
 .password-toggle:hover {

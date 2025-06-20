@@ -149,15 +149,6 @@ const Signup = () => {
             >
               Create Account
             </button>
-
-            <div className="auth-divider">
-              <span>or</span>
-            </div>
-
-            <button type="button" className="auth-button secondary">
-              <span className="google-icon">🌐</span>
-              Sign up with Google
-            </button>
           </form>
 
           <div className="auth-footer">

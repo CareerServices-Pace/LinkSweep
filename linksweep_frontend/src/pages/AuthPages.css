@@ -186,15 +186,26 @@
   color: #3b82f6;
   text-decoration: none;
   transition: color 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
 }
 
 .forgot-password:hover {
   color: #2563eb;
+  text-decoration: underline;
 }
 
 .terms-link {
   color: #3b82f6;
   text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
 }
 
 .terms-link:hover {

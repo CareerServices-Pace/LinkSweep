@@ -10,7 +10,7 @@
   font-size: 0.875rem;
 }
 
-/* Ultra-simple unified wrapper */
+/* Unified wrapper */
 .unified-wrapper {
   position: relative;
   background: #ffffff;
@@ -32,7 +32,7 @@
   border-color: #10b981;
 }
 
-/* Single input with no competing elements */
+/* Unified input with browser controls disabled */
 .unified-input {
   width: 100%;
   border: none;
@@ -43,13 +43,40 @@
   padding: 1rem;
   border-radius: 12px;
   font-family: inherit;
+
+  /* Disable browser password controls */
+  -webkit-textfield-decoration-container: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Specifically disable password reveal button */
+.unified-input::-webkit-textfield-decoration-container {
+  display: none !important;
+}
+
+.unified-input::-webkit-credentials-auto-fill-button {
+  display: none !important;
+}
+
+.unified-input::-webkit-strong-password-auto-fill-button {
+  display: none !important;
+}
+
+.unified-input::-ms-reveal {
+  display: none !important;
+}
+
+.unified-input::-ms-clear {
+  display: none !important;
 }
 
 .unified-input::placeholder {
   color: #9ca3af;
 }
 
-/* Static icon - no interaction */
+/* Static icon */
 .static-icon {
   position: absolute;
   left: 1rem;
@@ -61,18 +88,24 @@
   z-index: 1;
 }
 
-/* Remove all browser styling */
+/* Remove all focus styling from input */
 .unified-input:focus,
-.unified-input:active {
+.unified-input:active,
+.unified-input:focus-visible {
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
 }
 
-/* Autofill */
+/* Autofill styling */
 .unified-input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px white inset;
   -webkit-text-fill-color: #111827;
+}
+
+/* Force remove any browser controls */
+.unified-input[type="password"] {
+  -webkit-textfield-decoration-container: none !important;
 }
 
 /* Responsive */
@@ -85,4 +118,16 @@
   .static-icon {
     left: 0.875rem;
   }
+}
+
+/* Additional browser-specific overrides */
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none !important;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  visibility: hidden !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  right: 0 !important;
 }

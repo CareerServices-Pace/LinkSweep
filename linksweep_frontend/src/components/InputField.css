@@ -10,98 +10,131 @@
   font-size: 0.875rem;
 }
 
-/* Single unified container approach */
-.unified-input-container {
+/* Single wrapper with border */
+.seamless-wrapper {
   position: relative;
   background: #ffffff;
   border: 2px solid #e5e7eb;
   border-radius: 12px;
   transition: all 0.3s ease;
-  padding: 1rem;
 }
 
-.unified-input-container:hover {
+.seamless-wrapper:hover {
   border-color: #d1d5db;
 }
 
-.unified-input-container.focused {
+.seamless-wrapper.focused {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.unified-input-container.has-value {
+.seamless-wrapper.has-value {
   border-color: #10b981;
 }
 
-/* Content wrapper */
-.input-content {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  position: relative;
-}
-
-/* Icon styling */
-.input-icon {
-  color: #9ca3af;
-  font-size: 1.125rem;
-  margin-right: 0.75rem;
-  flex-shrink: 0;
-}
-
-/* Seamless input */
+/* Single input that fills the entire container */
 .seamless-input {
-  flex: 1;
+  width: 100%;
   border: none;
   outline: none;
   background: transparent;
   color: #111827;
   font-size: 1rem;
-  padding: 0;
-  margin: 0;
-  width: 100%;
+  padding: 1rem;
+  border-radius: 12px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.seamless-input.with-icon {
+  padding-left: 3rem;
+}
+
+.seamless-input.with-toggle {
+  padding-right: 3rem;
+}
+
+.seamless-input.with-icon.with-toggle {
+  padding-left: 3rem;
+  padding-right: 3rem;
 }
 
 .seamless-input::placeholder {
   color: #9ca3af;
 }
 
-/* Remove all browser default styling */
+/* Remove all possible browser styling */
 .seamless-input:focus {
-  border: none;
-  outline: none;
-  box-shadow: none;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .seamless-input:active {
-  border: none;
-  outline: none;
-  box-shadow: none;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-/* Password toggle */
-.password-toggle {
+/* Absolutely positioned icon */
+.absolute-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 1.125rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Absolutely positioned password toggle */
+.absolute-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
   color: #9ca3af;
   font-size: 1.125rem;
   cursor: pointer;
-  margin-left: 0.75rem;
-  flex-shrink: 0;
   transition: color 0.2s ease;
   user-select: none;
+  z-index: 1;
 }
 
-.password-toggle:hover {
+.absolute-toggle:hover {
   color: #6b7280;
+}
+
+/* Remove autofill styling */
+.seamless-input:-webkit-autofill,
+.seamless-input:-webkit-autofill:hover,
+.seamless-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-text-fill-color: #111827 !important;
+  transition: background-color 5000s ease-in-out 0s;
+  border: none !important;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .unified-input-container {
+  .seamless-input {
     padding: 0.875rem;
+    font-size: 0.9rem;
   }
 
-  .seamless-input {
-    font-size: 0.9rem;
+  .seamless-input.with-icon {
+    padding-left: 2.75rem;
+  }
+
+  .seamless-input.with-toggle {
+    padding-right: 2.75rem;
+  }
+
+  .seamless-input.with-icon.with-toggle {
+    padding-left: 2.75rem;
+    padding-right: 2.75rem;
   }
 }
 
@@ -109,17 +142,16 @@
 .seamless-input[type="email"],
 .seamless-input[type="password"],
 .seamless-input[type="text"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border-radius: 0;
+  border-radius: 12px;
 }
 
-/* Remove autofill styling */
-.seamless-input:-webkit-autofill,
-.seamless-input:-webkit-autofill:hover,
-.seamless-input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px white inset;
-  -webkit-text-fill-color: #111827;
-  transition: background-color 5000s ease-in-out 0s;
+/* Force remove any border on focus for different browsers */
+.seamless-input:focus-visible {
+  outline: none !important;
+  border: none !important;
+}
+
+.seamless-input:focus-within {
+  outline: none !important;
+  border: none !important;
 }

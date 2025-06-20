@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import InputField from "../components/InputField";
 import "./AuthPages.css";
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const { signup } = useAuth();
+
   const [formData, setFormData] = useState({
     email: "",
     username: "",
@@ -12,6 +16,8 @@ const Signup = () => {
   });
 
   const [passwordMatch, setPasswordMatch] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   // Auto-generate username from email
   useEffect(() => {
@@ -34,20 +40,50 @@ const Signup = () => {
   }, [formData.password, formData.confirmPassword]);
 
   const handleInputChange = (field) => (e) => {
+    // Prevent username changes if it was auto-generated
+    if (field === "username" && formData.email) {
+      return; // Don't allow manual username editing when email exists
+    }
+
     setFormData((prev) => ({
       ...prev,
       [field]: e.target.value,
     }));
+
+    // Clear error when user starts typing
+    if (error) setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!passwordMatch) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match!");
       return;
     }
-    // Handle signup logic here
-    console.log("Signup data:", formData);
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const result = await signup({
+        email: formData.email,
+        username: formData.username,
+        password: formData.password,
+      });
+
+      if (result.success) {
+        // Redirect to dashboard or home page
+        navigate("/dashboard");
+      } else {
+        setError(result.error || "Signup failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Signup error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -88,6 +124,8 @@ const Signup = () => {
           </div>
 
           <form className="auth-form" onSubmit={handleSubmit}>
+            {error && <div className="auth-error">{error}</div>}
+
             <InputField
               type="email"
               label="Email Address"
@@ -101,7 +139,9 @@ const Signup = () => {
             <InputField
               type="text"
               label="Username"
-              placeholder="Your username"
+              placeholder={
+                formData.email ? "Auto-generated from email" : "Your username"
+              }
               value={formData.username}
               onChange={handleInputChange("username")}
               required
@@ -132,15 +172,24 @@ const Signup = () => {
               <div className="password-error">Passwords do not match</div>
             )}
 
+            <div className="auth-options">
+              <label className="remember-me">
+                <input type="checkbox" required />
+                <span className="checkmark"></span>I agree to the{" "}
+                <button type="button" className="terms-link">
+                  Terms & Conditions
+                </button>
+              </label>
+            </div>
+
             <button
               type="submit"
               className="auth-button primary"
-              disabled={!passwordMatch}
+              disabled={!passwordMatch || loading}
             >
-              Create Account
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
           </form>
-
           <div className="auth-footer">
             <p>
               Already have an account?{" "}

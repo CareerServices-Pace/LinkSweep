@@ -1,25 +1,50 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import InputField from "../components/InputField";
 import "./AuthPages.css";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleInputChange = (field) => (e) => {
     setFormData((prev) => ({
       ...prev,
       [field]: e.target.value,
     }));
+    // Clear error when user starts typing
+    if (error) setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Login data:", formData);
+    setLoading(true);
+    setError("");
+
+    try {
+      const result = await login(formData);
+
+      if (result.success) {
+        // Redirect to dashboard or home page
+        navigate("/dashboard");
+      } else {
+        setError(result.error || "Login failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -59,6 +84,8 @@ const Login = () => {
           </div>
 
           <form className="auth-form" onSubmit={handleSubmit}>
+            {error && <div className="auth-error">{error}</div>}
+
             <InputField
               type="email"
               label="Email Address"
@@ -90,11 +117,14 @@ const Login = () => {
               </button>
             </div>
 
-            <button type="submit" className="auth-button primary">
-              Sign In
+            <button
+              type="submit"
+              className="auth-button primary"
+              disabled={loading}
+            >
+              {loading ? "Signing In..." : "Sign In"}
             </button>
           </form>
-
           <div className="auth-footer">
             <p>
               Don't have an account?{" "}

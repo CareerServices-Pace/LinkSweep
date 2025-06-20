@@ -10,33 +10,33 @@
   font-size: 0.875rem;
 }
 
-/* Alternative design - embrace the segments but make them look intentional */
+/* Border-free design using background and shadow */
 .unified-wrapper {
   position: relative;
   background: #f8fafc;
-  border: 1px solid #e2e8f0;
   border-radius: 12px;
   transition: all 0.3s ease;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .unified-wrapper:hover {
-  border-color: #cbd5e1;
   background: #f1f5f9;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
 .unified-wrapper.focused {
-  border-color: #3b82f6;
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  transform: translateY(-1px);
 }
 
 .unified-wrapper.has-value {
-  border-color: #10b981;
   background: #ffffff;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
 }
 
-/* Input styling that works with browser controls */
+/* Input styling without any borders */
 .unified-input {
   width: 100%;
   border: none;
@@ -46,7 +46,7 @@
   font-size: 1rem;
   padding: 1rem;
   font-family: inherit;
-  border-radius: 0;
+  border-radius: 12px;
 }
 
 .unified-input::placeholder {
@@ -65,31 +65,35 @@
   z-index: 1;
 }
 
-/* Remove focus styling from input - let wrapper handle it */
+/* Completely remove focus styling from input */
 .unified-input:focus,
-.unified-input:active {
+.unified-input:active,
+.unified-input:focus-visible {
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
+  background: transparent !important;
 }
 
-/* Style browser password controls to match our design */
+/* Hide/style browser password controls */
 .unified-input::-webkit-textfield-decoration-container {
-  background: transparent !important;
-  border: none !important;
+  display: none !important;
 }
 
-.unified-input::-webkit-credentials-auto-fill-button,
+.unified-input::-webkit-credentials-auto-fill-button {
+  display: none !important;
+}
+
 .unified-input::-webkit-strong-password-auto-fill-button {
-  background: transparent !important;
-  border: none !important;
-  color: #64748b !important;
+  display: none !important;
 }
 
 .unified-input::-ms-reveal {
-  background: transparent !important;
-  border: none !important;
-  color: #64748b !important;
+  display: none !important;
+}
+
+.unified-input::-ms-clear {
+  display: none !important;
 }
 
 /* Autofill styling */
@@ -103,6 +107,22 @@
   -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
 }
 
+/* Focus behavior on wrapper only */
+.unified-wrapper:focus-within {
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Remove all browser styling */
+.unified-input[type="email"],
+.unified-input[type="password"],
+.unified-input[type="text"] {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .unified-input {
@@ -113,20 +133,28 @@
   .static-icon {
     left: 0.875rem;
   }
+
+  .unified-wrapper.focused {
+    transform: none;
+  }
+
+  .unified-wrapper:focus-within {
+    transform: none;
+  }
 }
 
-/* Clean appearance for all input types */
-.unified-input[type="email"],
-.unified-input[type="password"],
-.unified-input[type="text"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+/* Force override any browser additions */
+.unified-wrapper * {
+  border: none !important;
 }
 
-/* Additional styling to make browser controls blend */
-.unified-wrapper:focus-within {
-  border-color: #3b82f6;
-  background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+/* Additional password field specific styling */
+input[type="password"] {
+  font-family:
+    "SF Pro Text",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif !important;
 }

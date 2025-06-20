@@ -10,13 +10,14 @@
   font-size: 0.875rem;
 }
 
-/* Single wrapper with border */
+/* Ultimate seamless wrapper */
 .seamless-wrapper {
   position: relative;
   background: #ffffff;
   border: 2px solid #e5e7eb;
   border-radius: 12px;
   transition: all 0.3s ease;
+  isolation: isolate; /* Create new stacking context */
 }
 
 .seamless-wrapper:hover {
@@ -32,19 +33,43 @@
   border-color: #10b981;
 }
 
-/* Single input that fills the entire container */
+/* Ultimate input styling - remove ALL browser defaults */
 .seamless-input {
   width: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
   color: #111827;
   font-size: 1rem;
   padding: 1rem;
   border-radius: 12px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+
+  /* Aggressive focus removal */
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-focus-ring-color: transparent !important;
+  -moz-outline: none !important;
+  -moz-user-focus: ignore !important;
+}
+
+/* Remove browser focus styling completely */
+.seamless-input:focus,
+.seamless-input:focus-visible,
+.seamless-input:focus-within,
+.seamless-input:active,
+.seamless-input:target {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-focus-ring-color: transparent !important;
 }
 
 .seamless-input.with-icon {
@@ -64,20 +89,7 @@
   color: #9ca3af;
 }
 
-/* Remove all possible browser styling */
-.seamless-input:focus {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-.seamless-input:active {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Absolutely positioned icon */
+/* Absolutely positioned icon - no interaction */
 .absolute-icon {
   position: absolute;
   left: 1rem;
@@ -86,10 +98,14 @@
   color: #9ca3af;
   font-size: 1.125rem;
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
-/* Absolutely positioned password toggle */
+/* Password toggle with aggressive styling removal */
 .absolute-toggle {
   position: absolute;
   right: 1rem;
@@ -100,21 +116,59 @@
   cursor: pointer;
   transition: color 0.2s ease;
   user-select: none;
-  z-index: 1;
+  z-index: 2;
+
+  /* Remove all possible button/element styling */
+  border: none !important;
+  background: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-focus-ring-color: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .absolute-toggle:hover {
   color: #6b7280;
 }
 
+.absolute-toggle:focus,
+.absolute-toggle:focus-visible,
+.absolute-toggle:focus-within,
+.absolute-toggle:active {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
 /* Remove autofill styling */
 .seamless-input:-webkit-autofill,
 .seamless-input:-webkit-autofill:hover,
-.seamless-input:-webkit-autofill:focus {
+.seamless-input:-webkit-autofill:focus,
+.seamless-input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 1000px white inset !important;
   -webkit-text-fill-color: #111827 !important;
   transition: background-color 5000s ease-in-out 0s;
   border: none !important;
+  outline: none !important;
+}
+
+/* Force override any browser focus rings */
+.seamless-wrapper *:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.seamless-wrapper *:focus-visible {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* Responsive adjustments */
@@ -136,22 +190,42 @@
     padding-left: 2.75rem;
     padding-right: 2.75rem;
   }
+
+  .absolute-icon {
+    left: 0.875rem;
+  }
+
+  .absolute-toggle {
+    right: 0.875rem;
+  }
 }
 
-/* Additional browser compatibility */
+/* Additional aggressive browser compatibility */
 .seamless-input[type="email"],
 .seamless-input[type="password"],
 .seamless-input[type="text"] {
   border-radius: 12px;
-}
-
-/* Force remove any border on focus for different browsers */
-.seamless-input:focus-visible {
-  outline: none !important;
   border: none !important;
 }
 
-.seamless-input:focus-within {
-  outline: none !important;
-  border: none !important;
+/* Safari specific fixes */
+@supports (-webkit-appearance: none) {
+  .seamless-input {
+    -webkit-appearance: none !important;
+  }
+
+  .absolute-toggle {
+    -webkit-appearance: none !important;
+  }
+}
+
+/* Firefox specific fixes */
+@-moz-document url-prefix() {
+  .seamless-input {
+    -moz-appearance: none !important;
+  }
+
+  .absolute-toggle {
+    -moz-appearance: none !important;
+  }
 }

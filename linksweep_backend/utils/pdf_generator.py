@@ -2,7 +2,10 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from datetime import datetime
 
-def generate_pdf_report(scan_id, results, output_path='scan_report.pdf'):
+def generate_pdf_report(scan_id, results, output_path=None):
+    if output_path is None:
+        output_path = f"scan_{scan_id}_report.pdf"
+
     c = canvas.Canvas(output_path, pagesize=letter)
     width, height = letter
 
@@ -23,3 +26,4 @@ def generate_pdf_report(scan_id, results, output_path='scan_report.pdf'):
 
     c.save()
     print(f"📄 PDF Report saved to {output_path}")
+    return output_path   # ✅ IMPORTANT: Return file path

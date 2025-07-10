@@ -12,47 +12,99 @@ def is_internal(base_url, link_url):
 
 def should_exclude(link, exclude_paths):
     # Always-ignore patterns
-    always_exclude = ["facebook.com", "twitter.com", "linkedin.com", "mailto:", "tel:"]
+    always_exclude = []
 
     return (
-        any(path in link for path in exclude_paths) or
-        any(pattern in link.lower() for pattern in always_exclude)
+        any(path in link for path in exclude_paths) 
+        # or
+        # any(pattern in link.lower() for pattern in always_exclude)
     )
 
+def get_fix_guide(status_code, diagnosis):
+    if diagnosis is None:
+        return ""
+
+    if status_code == 429:
+        return "This page is blocking too many requests. Try scanning slower, or check it manually in a browser."
+    if status_code == 403:
+        return "Access is forbidden — the page might block bots or require permissions. Check it manually."
+    if status_code == 401:
+        return "Login is required to view this page. Try logging in and checking it directly."
+    if "Redirected to login" in diagnosis:
+        return "This page redirected to a login screen. Try opening it manually after logging in."
+    if status_code == 404:
+        return "The page doesn't exist. Consider removing or updating the link."
+    if status_code is None:
+        return "We couldn't check this link due to a technical error. Try again later or check manually."
+    if status_code >= 500:
+        return "The website has a server issue. Try again later or report it to the site owner."
+
+    return "No issues detected or no fix available."
+
+
 async def fetch_page(session, url, timeout):
+    ssl_context = ssl.create_default_context()
     try:
-        async with session.get(url, timeout=timeout, ssl=ssl.SSLContext()) as response:
+        async with session.get(url, timeout=timeout, ssl=ssl_context) as response:
             content = await response.text()
             return response.status, content
     except Exception:
         return None, None
 
-async def check_link(session, source_page, link, timeout, base_url, exclude_paths, delay=0.2, retry_count=2):
+async def check_link(session, source_page, link, timeout, base_url, exclude_paths, delay=1, retry_count=2):
     if should_exclude(link, exclude_paths):
         return None
 
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36"
-    }
+    await asyncio.sleep(delay)  # ⏱️ Throttle
 
-    await asyncio.sleep(delay)
+    diagnosis = ""
+    redirected_to_login = False
+
+    ssl_context = ssl.create_default_context()
 
     for attempt in range(retry_count + 1):
         try:
-            async with session.get(link, timeout=timeout, ssl=ssl.SSLContext(), headers=headers) as resp:
+            async with session.get(link, timeout=timeout, ssl=ssl_context, allow_redirects=True) as resp:
+                final_url = str(resp.url).lower()
+                redirected_to_login = any(keyword in final_url for keyword in ["login", "signin", "auth"])
+
+                status = resp.status
+                diagnosis = None
+
+                if status == 429:
+                    diagnosis = "Too many requests – possibly rate-limited or bot-blocked."
+                elif status == 403:
+                    diagnosis = "Access forbidden – may be bot-protection or restricted page."
+                elif status == 401:
+                    diagnosis = "Unauthorized – login likely required."
+                elif redirected_to_login:
+                    diagnosis = "Redirected to login page – protected resource."
+                elif status == 404:
+                    diagnosis = "Not found – broken or moved link."
+                elif status >= 500:
+                    diagnosis = "Server error – issue on target site."
+                elif status is None:
+                    diagnosis = "Request failed – possible DNS, timeout, or connection error."
+
+
+                fix_guide = get_fix_guide(status, diagnosis)
+
                 result = {
                     "sourcePage": source_page,
                     "link": link,
-                    "statusCode": resp.status,
+                    "statusCode": status,
                     "statusText": resp.reason,
-                    "linkType": "internal" if is_internal(base_url, link) else "external"
+                    "linkType": "internal" if is_internal(base_url, link) else "external",
+                    "redirectedToLogin": redirected_to_login,
+                    "diagnosis": diagnosis,
+                    "fixGuide": fix_guide
                 }
 
-                # Print link result with color
-                if resp.status is None or resp.status >= 400:
-                    print(f'\033[91m❌ {link} ({resp.status} {resp.reason})\033[0m')
+                # ✅ Colored terminal output
+                if status is None or status >= 400:
+                    print(f'\033[91m❌ {link} ({status} {resp.reason}) -> {diagnosis or ""}\033[0m')
                 else:
-                    print(f'\033[92m✅ {link} ({resp.status} {resp.reason})\033[0m')
+                    print(f'\033[92m✅ {link} ({status} {resp.reason})\033[0m')
 
                 return result
 
@@ -64,10 +116,14 @@ async def check_link(session, source_page, link, timeout, base_url, exclude_path
                     "link": link,
                     "statusCode": None,
                     "statusText": str(e),
-                    "linkType": "internal" if is_internal(base_url, link) else "external"
+                    "linkType": "internal" if is_internal(base_url, link) else "external",
+                    "redirectedToLogin": False,
+                    "diagnosis": "Failed to load – possible DNS, timeout, or firewall issue.",
+                    "fixGuide": ""
                 }
 
-        await asyncio.sleep(2 ** attempt)  # Exponential backoff
+        # 📈 Backoff retry
+        await asyncio.sleep(2 ** attempt)
 
 async def crawl_page(session, url, base_url, depth, max_depth, timeout, exclude_paths):
     results = []
@@ -119,5 +175,14 @@ async def start_crawl(start_url: str, max_depth: int, timeout: int, exclude_path
     global visited_pages
     visited_pages = set()
 
-    async with aiohttp.ClientSession() as session:
+    headers = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/114.0.5735.198 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.5"
+}
+
+    async with aiohttp.ClientSession(headers=headers) as session:
         return await crawl_page(session, start_url, start_url, 0, max_depth, timeout, exclude_paths)

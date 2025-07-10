@@ -20,3 +20,24 @@ async def save_config(userID: int, config: Dict) -> int:
     except Exception as e:
         await conn.close()
         raise e
+
+
+async def update_config(userID: int, scanID: int, config: Dict):
+    conn = await get_connection()
+    try:
+        timestamp = datetime.utcnow()
+        startURL = config.get("startURL")
+
+        result = await conn.execute("""
+            UPDATE scans
+            SET "startURL" = $1,
+                config = $2,
+                "modifiedAt" = $3
+            WHERE "scanID" = $4 AND "userID" = $5
+        """, startURL, json.dumps(config), timestamp, scanID, userID)
+
+        if result == "UPDATE 0":
+            raise HTTPException(status_code=404, detail="Configuration not found or not owned by user")
+    finally:
+        await conn.close()
+

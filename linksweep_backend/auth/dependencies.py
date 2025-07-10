@@ -15,25 +15,29 @@ async def get_current_user(request: Request):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id: Optional[str] = payload.get("sub")
-        role = payload.get("role")
-        if user_id is None or role is None:
+        if user_id is None:
             raise HTTPException(status_code=401, detail="Invalid token")
     except JWTError:
         raise HTTPException(status_code=401, detail="Token verification failed")
 
-    # Optional: Fetch user from DB for validation
     conn = await get_connection()
-    user = await conn.fetchrow('SELECT * FROM users WHERE "UserID" = $1', int(user_id))
+    user = await conn.fetchrow("""
+        SELECT u.*, r."RoleName"
+        FROM users u
+        JOIN roles r ON u."RoleID" = r."RoleID"
+        WHERE u."UserID" = $1
+    """, int(user_id))
     await conn.close()
+
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
     user_dict = dict(user)
-    user_dict["role"] = role
+    user_dict["role"] = user_dict.pop("RoleName")  # Put 'Admin' / 'User' as role key
     return user_dict
 
 
 async def admin_required(user=Depends(get_current_user)):
-    if user.get("roleid") != 1:  # Assuming 1 is the RoleID for admin
+    if user.get("RoleID") != 1:  # Assuming 1 is the RoleID for admin
         raise HTTPException(status_code=403, detail="Admin access required")
     return user

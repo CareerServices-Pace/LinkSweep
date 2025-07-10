@@ -5,15 +5,23 @@ from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from fastapi.openapi.models import OAuth2 as OAuth2Model
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
+from dashboard.routes import dashboard_router
+from history.routes import history_router
+from config import routes as config_routes
+from dotenv import load_dotenv
+load_dotenv()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 app = FastAPI()
 app.include_router(auth_router)
+app.include_router(dashboard_router)
+app.include_router(history_router)
+app.include_router(config_routes.router)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # frontend origin
+    allow_origins=["http://localhost:3000", "http://localhost:4173", "http://localhost:4174", "https://preview--dashboard-look-book.lovable.app"],  # frontend origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

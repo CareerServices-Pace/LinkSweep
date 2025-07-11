@@ -121,21 +121,20 @@ async def login(data: LoginRequest, response: Response):
         "sub": str(user["UserID"])
     })
 
-    # ✅ Set BOTH tokens as httpOnly cookies
     response.set_cookie(
         key="access_token",
         value=access_token,
         httponly=True,
-        secure=False,  # ✅ For local dev. Change to True in production
-        samesite="Strict"
+        secure=True,
+        samesite="None"
     )
 
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
-        secure=False,
-        samesite="Strict"
+        secure=True,
+        samesite="None"
     )
 
     return {

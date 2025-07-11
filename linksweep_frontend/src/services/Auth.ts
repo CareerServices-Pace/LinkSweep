@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { number } from "zod";
 
 // Create axios instance with default config
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 const authAPI: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,

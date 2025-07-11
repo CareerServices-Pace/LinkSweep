@@ -1,13 +1,6 @@
 import axios from 'axios';
 import { apiClient } from './Auth';
 
-// Axios instance with default config
-const apiClient = axios.create({
-  baseURL: BASE_URL,
-  timeout: 10000,
-  withCredentials: true,
-});
-
 // Axios interceptor for Authorization Header (optional, since you're using cookies)
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken');

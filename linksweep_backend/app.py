@@ -21,7 +21,7 @@ app.include_router(config_routes.router)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://link-sweep.vercel.app/"],  # frontend origin
+    allow_origins=["https://link-sweep.vercel.app", "http://localhost:3000/"],  # frontend origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

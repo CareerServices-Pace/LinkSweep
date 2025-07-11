@@ -21,7 +21,7 @@ app.include_router(config_routes.router)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:4173", "http://localhost:4174", "https://preview--dashboard-look-book.lovable.app"],  # frontend origin
+    allow_origins=["https://link-sweep.vercel.app/"],  # frontend origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

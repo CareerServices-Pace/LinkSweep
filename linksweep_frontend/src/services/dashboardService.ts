@@ -2,13 +2,6 @@
 import axios from 'axios';
 import { apiClient } from './Auth';
 
-// Create axios instance with base configuration
-const apiClient = axios.create({
-  baseURL: BASE_URL,
-  timeout: 10000,
-  withCredentials: true,
-});
-
 // Add request interceptor to include auth token
 apiClient.interceptors.request.use((config) => {
   // Get token from localStorage or your auth context

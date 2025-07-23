@@ -1,14 +1,22 @@
 import asyncpg
 import os
 from dotenv import load_dotenv
+from urllib.parse import urlparse
 
 load_dotenv()
 
+
 async def get_connection():
+    # Get DB URL from environment or use a fallback
+    db_url = os.getenv("DATABASE_URL")
+
+    # Parse the URL
+    parsed_url = urlparse(db_url)
+
     return await asyncpg.connect(
-        user=os.getenv("DB_USER", "karandavda"),
-        password=os.getenv("DB_PASS", "KRD@1721#Pace$"),
-        database=os.getenv("DB_NAME", "linksweep"),
-        host=os.getenv("DB_HOST", "localhost"),
-        port=os.getenv("DB_PORT", "5432")
+        user=parsed_url.username,
+        password=parsed_url.password,
+        database=parsed_url.path.lstrip("/"),  # remove leading '/'
+        host=parsed_url.hostname,
+        port=parsed_url.port
     )

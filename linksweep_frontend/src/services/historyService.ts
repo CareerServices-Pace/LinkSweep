@@ -1,4 +1,3 @@
-
 import { apiClient } from './Auth';
 
 export interface ScanResult {

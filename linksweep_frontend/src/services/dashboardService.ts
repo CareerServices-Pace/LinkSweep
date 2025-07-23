@@ -1,14 +1,5 @@
-
 import axios from 'axios';
-
-const BASE_URL = 'http://localhost:8000/';
-
-// Create axios instance with base configuration
-const apiClient = axios.create({
-  baseURL: BASE_URL,
-  timeout: 10000,
-  withCredentials: true,
-});
+import { apiClient } from './Auth';
 
 // Add request interceptor to include auth token
 apiClient.interceptors.request.use((config) => {

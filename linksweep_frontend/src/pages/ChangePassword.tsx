@@ -74,12 +74,7 @@ const ChangePassword = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - 60% */}
-      <AuthLeftSide 
-        title="Secure Your Account"
-        subtitle="Keep your account secure by updating your password regularly."
-        quote="Security is not a product, but a process."
-        quoteAuthor="Your Digital Safety Matters"
-      />
+      <AuthLeftSide />
 
       {/* Right Side - 40% */}
       <div className="lg:w-2/5 w-full flex items-center justify-center bg-background px-8 py-12">

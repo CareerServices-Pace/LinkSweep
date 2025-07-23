@@ -7,14 +7,15 @@ interface User {
   id: string;
   email: string;
   username: string;
-  firstName?: string;
+  firstName: string;
+  forcePasswordReset?: boolean;
 }
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
-  login: (credentials: { email: string; password: string }) => Promise<{ success: boolean; error?: string }>;
+  login: (credentials: { email: string; password: string }) => Promise<{ success: boolean; error?: string; user?: User }>;
   signup: (userData: { email: string; username: string; password: string }) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   checkAuthStatus: () => Promise<void>;
@@ -51,7 +52,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, [location.pathname]);
 
-  
+
   const checkAuthStatus = async (): Promise<void> => {
 
     if (!loading && !isAuthenticated) return;
@@ -75,22 +76,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const login = async (credentials: { email: string; password: string }): Promise<{ success: boolean; error?: string }> => {
+  const login = async (
+    credentials: { email: string; password: string }
+  ): Promise<{ success: boolean; error?: string; user?: User }> => {
     try {
       setLoading(true);
 
       const result = await AuthService.login(credentials);
 
       if (result.success) {
-        // After successful login, get user info
         const userResult = await AuthService.getCurrentUser();
         if (userResult.success && userResult.user) {
           setUser(userResult.user);
           setIsAuthenticated(true);
+          return { success: true, user: userResult.user }; // ✅ INCLUDE user
         }
       }
 
-      return result;
+      return { success: false, error: result.error || "Login failed." };
     } catch (error) {
       console.error("Login failed:", error);
       return { success: false, error: "Login failed. Please try again." };
@@ -98,6 +101,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(false);
     }
   };
+
 
   const signup = async (userData: { email: string; username: string; password: string }): Promise<{ success: boolean; error?: string }> => {
     try {

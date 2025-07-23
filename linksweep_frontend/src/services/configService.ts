@@ -1,13 +1,6 @@
 import axios from 'axios';
+import { apiClient } from './Auth';
 
-const BASE_URL = 'http://localhost:8000';
-
-// Axios instance with default config
-const apiClient = axios.create({
-  baseURL: BASE_URL,
-  timeout: 10000,
-  withCredentials: true,
-});
 
 // Axios interceptor for Authorization Header (optional, since you're using cookies)
 apiClient.interceptors.request.use((config) => {

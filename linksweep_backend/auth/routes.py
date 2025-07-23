@@ -101,7 +101,7 @@ async def signup(data: SignupRequest):
 async def login(data: LoginRequest, response: Response):
     conn = await get_connection()
     user = await conn.fetchrow("""
-        SELECT users."UserID", users.email, users.username, users.password, roles."RoleName"
+        SELECT users."UserID", users.email, users.username, users.password, roles."RoleName", users."firstName", users."lastName", users."forcePasswordReset"
         FROM users
         JOIN roles ON users."RoleID" = roles."RoleID"
         WHERE users.email = $1
@@ -144,7 +144,10 @@ async def login(data: LoginRequest, response: Response):
         "user": {
             "id": user["UserID"],
             "email": user["email"],
-            "username": user["username"]
+            "username": user["username"],
+            "firstName": user['firstName'],
+            "lastName": user['lastName'],
+            "forcePasswordReset": user['forcePasswordReset']
     }
 }
 
@@ -210,7 +213,8 @@ async def get_me(user: dict = Depends(get_current_user)):
         "email": user["email"],
         "username": user["username"],
         "firstName": user["firstName"],
-        "role": user["role"]
+        "role": user["role"],
+        "forcePasswordReset": user["forcePasswordReset"]
     }
 
 @auth_router.get("/admins", dependencies=[Depends(admin_required)])
@@ -399,7 +403,10 @@ async def change_password(data: ChangePasswordRequest, user: dict = Depends(get_
 
         hashed_new_password = hash_password(data.new_password)
 
-        await conn.execute('UPDATE users SET password = $1 WHERE "UserID" = $2', hashed_new_password, user["UserID"])
+        if user["forcePasswordReset"]:
+            user["forcePasswordReset"] = False
+
+        await conn.execute('UPDATE users SET password = $1, "forcePasswordReset" = $2 WHERE "UserID" = $3', hashed_new_password, user["forcePasswordReset"], user["UserID"])
         await conn.close()
 
         return {

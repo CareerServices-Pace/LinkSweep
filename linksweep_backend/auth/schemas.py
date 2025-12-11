@@ -3,7 +3,7 @@ from typing import Optional
 
 class SignupRequest(BaseModel):
     email: EmailStr
-    username: str
+    username: Optional[str] = None  # If not provided, will be set to firstName
     password: Optional[str] = None  # If provided, use it; otherwise generate random
     firstName: Optional[str] = None
     lastName: Optional[str] = None

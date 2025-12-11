@@ -36,7 +36,6 @@ interface AuthResponse {
 
 interface SignupData {
   email: string;
-  username: string;
   password: string;
   firstName?: string;
   lastName?: string;
@@ -123,7 +122,6 @@ export class AuthService {
     try {
       const response = await authAPI.post("/auth/signup", {
         email: userData.email,
-        username: userData.username,
         password: userData.password,
         firstName: userData.firstName,
         lastName: userData.lastName,

@@ -167,6 +167,16 @@
                 {isLoading ? "Signing In..." : "Sign In"}
               </Button>
             </form>
+
+            {/* Sign Up Link */}
+            <div className="text-center mt-6">
+              <p className="text-gray-600">
+                Don't have an account?{' '}
+                <Link to="/signup" className="text-blue-600 hover:text-blue-800 font-medium">
+                  Sign Up
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>

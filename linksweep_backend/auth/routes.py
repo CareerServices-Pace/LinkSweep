@@ -29,8 +29,14 @@ async def signup(data: SignupRequest):
         await conn.close()
         raise HTTPException(status_code=400, detail="Only @pace.edu emails are allowed")
 
+    # Set username to firstName if not provided
+    username = data.username if data.username else (data.firstName if data.firstName else "")
+    if not username:
+        await conn.close()
+        raise HTTPException(status_code=400, detail="First name is required")
+
     # Check for existing user
-    existing_user = await conn.fetchval('SELECT 1 FROM users WHERE email = $1 OR username = $2', data.email, data.username)
+    existing_user = await conn.fetchval('SELECT 1 FROM users WHERE email = $1 OR username = $2', data.email, username)
     if existing_user:
         await conn.close()
         raise HTTPException(status_code=400, detail="User with this email or username already exists")
@@ -44,7 +50,7 @@ async def signup(data: SignupRequest):
         role_id = data.role_id
     else:
         # Default to "user" role (assuming role_id = 2 for "user", 1 for "admin")
-        user_role = await conn.fetchval('SELECT "RoleID" FROM roles WHERE "RoleName" = $1', "user")
+        user_role = await conn.fetchval('SELECT "RoleID" FROM roles WHERE "RoleName" = $1', "User")
         if not user_role:
             await conn.close()
             raise HTTPException(status_code=500, detail="Default user role not found")
@@ -65,7 +71,7 @@ async def signup(data: SignupRequest):
     await conn.execute("""
         INSERT INTO users (email, username, password, "RoleID", "firstName", "lastName", "forcePasswordReset", "createdAt", "modifiedAt")
         VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
-    """, data.email, data.username, hashed_password, role_id, data.firstName, data.lastName, force_password_reset)
+    """, data.email, username, hashed_password, role_id, data.firstName, data.lastName, force_password_reset)
 
     await conn.close()
 
@@ -74,7 +80,7 @@ async def signup(data: SignupRequest):
         # Prepare dynamic email content
         subject = "🎉 Welcome to LinkSweep - Your Login Credentials"
         plain_text = f"""
-        Hello {data.username},
+        Hello {username},
 
         Welcome to LinkSweep!
 
@@ -90,14 +96,14 @@ async def signup(data: SignupRequest):
         <html>
             <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
                 <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); padding: 30px;">
-                    <h2 style="color: #333333;">👋 Hello <span style="color: #4F46E5;">{data.username}</span>,</h2>
+                    <h2 style="color: #333333;">👋 Hello <span style="color: #4F46E5;">{username}</span>,</h2>
                     <p style="color: #555555; font-size: 16px;">Welcome to <strong>LinkSweep</strong>! Your account has been successfully created.</p>
 
                     <h3 style="color: #4F46E5; margin-top: 20px;">🔑 Login Credentials:</h3>
                     <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
                         <tr>
                             <td style="padding: 8px; background-color: #f1f5f9; color: #333; border-radius: 4px;">Username:</td>
-                            <td style="padding: 8px; color: #111;">{data.username}</td>
+                            <td style="padding: 8px; color: #111;">{username}</td>
                         </tr>
                         <tr>
                             <td style="padding: 8px; background-color: #f1f5f9; color: #333; border-radius: 4px;">Password:</td>

@@ -42,6 +42,9 @@ async def run_scan(userID: int, scanID: int) -> Dict:
         #Fix: Handle string excludePaths
         if isinstance(excludePaths, str):
             excludePaths = [path.strip() for path in excludePaths.split(",") if path.strip()]
+        #Fix: Handle non-list types (int, None, etc.) - convert to empty list
+        elif not isinstance(excludePaths, list):
+            excludePaths = []
 
         print("🚀 Crawling started...")
         print(f"StartURL: {startURL}, Max Depth: {max_depth}, Timeout: {timeout}, Exclude Paths: {excludePaths}")

@@ -13,11 +13,18 @@ def is_internal(base_url, link_url):
 def should_exclude(link, exclude_paths):
     # Always-ignore patterns
     always_exclude = []
-
+    
+    # Safety check: ensure exclude_paths is iterable
+    if not isinstance(exclude_paths, (list, tuple, set)):
+        return False
+    
+    # Convert link to lowercase for case-insensitive matching
+    link_lower = link.lower()
+    
     return (
-        any(path in link for path in exclude_paths) 
+        any(path.lower() in link_lower for path in exclude_paths) 
         # or
-        # any(pattern in link.lower() for pattern in always_exclude)
+        # any(pattern in link_lower for pattern in always_exclude)
     )
 
 def get_fix_guide(status_code, diagnosis):

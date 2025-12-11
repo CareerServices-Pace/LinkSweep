@@ -11,6 +11,8 @@ import { useToast } from '@/hooks/use-toast';
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -35,7 +37,7 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      const result = await signup({ email, username, password });
+      const result = await signup({ email, username, password, firstName, lastName });
       if (result.success) {
         toast({
           title: "Success",
@@ -158,6 +160,46 @@ const Signup = () => {
                   placeholder="Enter your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  className="pl-10 h-12 bg-gray-50 border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+            </div>
+
+            {/* First Name Field */}
+            <div>
+              <Label htmlFor="firstName" className="text-sm font-medium text-gray-700 mb-2 block">
+                First Name
+              </Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lg">👤</span>
+                <Input
+                  id="firstName"
+                  type="text"
+                  placeholder="Enter your first name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="pl-10 h-12 bg-gray-50 border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+            </div>
+
+            {/* Last Name Field */}
+            <div>
+              <Label htmlFor="lastName" className="text-sm font-medium text-gray-700 mb-2 block">
+                Last Name
+              </Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lg">👤</span>
+                <Input
+                  id="lastName"
+                  type="text"
+                  placeholder="Enter your last name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
                   className="pl-10 h-12 bg-gray-50 border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   required
                   disabled={isLoading}

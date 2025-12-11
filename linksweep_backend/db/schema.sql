@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS users (
     "firstName" VARCHAR(100),
     "lastName" VARCHAR(100),
     "RoleID" INTEGER NOT NULL,
+    "forcePasswordReset" BOOLEAN DEFAULT FALSE,
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "modifiedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_users_role FOREIGN KEY ("RoleID") REFERENCES roles("RoleID") ON DELETE RESTRICT
@@ -186,4 +187,5 @@ COMMENT ON TABLE linkresults IS 'Stores detailed link check results for each sca
 
 COMMENT ON COLUMN scans."config" IS 'JSON field storing scan parameters: maxDepth, timeout, excludePaths, etc.';
 COMMENT ON COLUMN linkresults."redirectedToLogin" IS 'Boolean flag indicating if the link redirected to a login page';
+
 

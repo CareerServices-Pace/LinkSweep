@@ -1,11 +1,13 @@
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 class SignupRequest(BaseModel):
     email: EmailStr
     username: str
-    firstName: str
-    lastName: str
-    role_id: int
+    password: Optional[str] = None  # If provided, use it; otherwise generate random
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    role_id: Optional[int] = None  # If not provided, default to "user" role
 
 class LoginRequest(BaseModel):
     email: EmailStr

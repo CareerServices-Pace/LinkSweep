@@ -26,30 +26,54 @@ async def signup(data: SignupRequest):
     conn = await get_connection()
 
     if not data.email.endswith("@pace.edu"):
+        await conn.close()
         raise HTTPException(status_code=400, detail="Only @pace.edu emails are allowed")
 
-    role_exists = await conn.fetchval('SELECT 1 FROM roles WHERE "RoleID" = $1', data.role_id)
-    if not role_exists:
-        raise HTTPException(status_code=400, detail="Invalid role ID")
-
-    existing_user = await conn.fetchval('SELECT 1 FROM users WHERE email = $1', data.email)
+    # Check for existing user
+    existing_user = await conn.fetchval('SELECT 1 FROM users WHERE email = $1 OR username = $2', data.email, data.username)
     if existing_user:
         await conn.close()
-        raise HTTPException(status_code=400, detail="User with this email already exists")
+        raise HTTPException(status_code=400, detail="User with this email or username already exists")
 
-    raw_password = generate_random_password()
+    # Determine role_id: use provided one, or default to "user" role
+    if data.role_id:
+        role_exists = await conn.fetchval('SELECT 1 FROM roles WHERE "RoleID" = $1', data.role_id)
+        if not role_exists:
+            await conn.close()
+            raise HTTPException(status_code=400, detail="Invalid role ID")
+        role_id = data.role_id
+    else:
+        # Default to "user" role (assuming role_id = 2 for "user", 1 for "admin")
+        user_role = await conn.fetchval('SELECT "RoleID" FROM roles WHERE "RoleName" = $1', "user")
+        if not user_role:
+            await conn.close()
+            raise HTTPException(status_code=500, detail="Default user role not found")
+        role_id = user_role
+
+    # Determine password: use provided one, or generate random
+    is_self_registration = data.password is not None
+    if is_self_registration:
+        raw_password = data.password
+        force_password_reset = False  # User set their own password
+    else:
+        raw_password = generate_random_password()
+        force_password_reset = True  # Admin-created account, must reset password
+
     hashed_password = hash_password(raw_password)
 
+    # Insert user into database
     await conn.execute("""
-        INSERT INTO users (email, username, password, "RoleID", "firstName", "lastName", "createdAt", "modifiedAt")
-        VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
-    """, data.email, data.username, hashed_password, data.role_id, data.firstName, data.lastName)
+        INSERT INTO users (email, username, password, "RoleID", "firstName", "lastName", "forcePasswordReset", "createdAt", "modifiedAt")
+        VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
+    """, data.email, data.username, hashed_password, role_id, data.firstName, data.lastName, force_password_reset)
 
     await conn.close()
 
-    # Prepare dynamic email content
-    subject = "🎉 Welcome to LinkSweep - Your Login Credentials"
-    plain_text = f"""
+    # Only send email if password was auto-generated (admin-created account)
+    if not is_self_registration:
+        # Prepare dynamic email content
+        subject = "🎉 Welcome to LinkSweep - Your Login Credentials"
+        plain_text = f"""
         Hello {data.username},
 
         Welcome to LinkSweep!
@@ -62,7 +86,7 @@ async def signup(data: SignupRequest):
         Regards,
         LinkSweep Team
     """
-    html_content = f"""
+        html_content = f"""
         <html>
             <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
                 <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); padding: 30px;">
@@ -92,10 +116,10 @@ async def signup(data: SignupRequest):
             </body>
         </html>
     """
-
-    send_email(data.email, subject, plain_text, html_content)
-
-    return {"message": "User created successfully and email sent"}
+        send_email(data.email, subject, plain_text, html_content)
+        return {"message": "User created successfully and email sent"}
+    else:
+        return {"message": "User created successfully"}
 
 @auth_router.post("/login")
 async def login(data: LoginRequest, response: Response):

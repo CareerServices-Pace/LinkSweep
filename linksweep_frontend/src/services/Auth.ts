@@ -38,6 +38,8 @@ interface SignupData {
   email: string;
   username: string;
   password: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 interface CreateUserData {
@@ -123,6 +125,8 @@ export class AuthService {
         email: userData.email,
         username: userData.username,
         password: userData.password,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
       });
 
       // Successful signup - tokens are now in httpOnly cookies

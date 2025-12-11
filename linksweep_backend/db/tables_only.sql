@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS users (
     "firstName" VARCHAR(100),
     "lastName" VARCHAR(100),
     "RoleID" INTEGER NOT NULL,
+    "forcePasswordReset" BOOLEAN DEFAULT FALSE,
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "modifiedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_users_role FOREIGN KEY ("RoleID") REFERENCES roles("RoleID") ON DELETE RESTRICT
@@ -155,4 +156,5 @@ VALUES
     ('admin', 'active'),
     ('user', 'active')
 ON CONFLICT ("RoleName") DO NOTHING;
+
 
